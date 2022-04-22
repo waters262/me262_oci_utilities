@@ -1,6 +1,7 @@
 import oci
 import sys
 # appending the directory for modules
+# Example:  python3 testAuthClient.py target_profile
 # in the sys.path list
 sys.path.append('../pyUtils/')       
  
@@ -46,13 +47,15 @@ if __name__ == "__main__":
                                     ,compartment_id_in_subtree=True)
 
     network = get_client(client_type='VirtualNetworkClient',    tenancyConfig=tenancyConfig)
+    database_client = get_client(client_type='DatabaseClient',    tenancyConfig=tenancyConfig)
+    compute_client = get_client(client_type='ComputeClient',    tenancyConfig=tenancyConfig)
+
     # network = oci.core.VirtualNetworkClient({'region': ssoRegion}, signer=signer)
 
     print("Network var type: ", type(network))
+    print("Compute var type: ", type(compute_client))
+    print("Database var type: ", type(database_client))
     print(network)
-
-
-
 
 
 #    signer =  oci.auth.signers.InstancePrincipalsSecurityTokenSigner()

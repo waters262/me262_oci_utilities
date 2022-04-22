@@ -65,5 +65,36 @@ def get_client(client_type='IdentityClient',auth_type='auth_token',tenancyConfig
                delegation_token=delegation_token)
             return oci.core.VirtualNetworkClient({},signer=signer)
               
-                
-    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient']
+    if client_type == 'ComputeClient':
+        if auth_type == 'security_token':  # Typical web browser authentication
+            return oci.core.ComputeClient(
+                            {'region':oci.config.from_file(profile_name=tenancyProfile)['region']},
+                            signer=token_signer(tenancyConfig['auth_profile'])  )
+        elif auth_type == 'auth_token':   # Set up with authentication token
+            return oci.core.ComputeClient(tenancyConfig)
+        elif auth_type == 'instance_principal': # Instance principal
+            signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            return oci.core.ComputeClient({},signer=signer)
+        elif auth_type == 'obo':  # Cloud Shell
+            delegation_token = open('/etc/oci/delegation_token', 'r').read()
+            signer = oci.auth.signers.InstancePrincipalsDelegationTokenSigner(
+               delegation_token=delegation_token)
+            return oci.core.ComputeClient({},signer=signer)
+              
+    if client_type == 'DatabaseClient':
+        if auth_type == 'security_token':  # Typical web browser authentication
+            return oci.database.DatabaseClient(
+                            {'region':oci.config.from_file(profile_name=tenancyProfile)['region']},
+                            signer=token_signer(tenancyConfig['auth_profile'])  )
+        elif auth_type == 'auth_token':   # Set up with authentication token
+            return oci.database.DatabaseClient(tenancyConfig)
+        elif auth_type == 'instance_principal': # Instance principal
+            signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            return oci.database.DatabaseClient({},signer=signer)
+        elif auth_type == 'obo':  # Cloud Shell
+            delegation_token = open('/etc/oci/delegation_token', 'r').read()
+            signer = oci.auth.signers.InstancePrincipalsDelegationTokenSigner(
+               delegation_token=delegation_token)
+            return oci.database.DatabaseClient({},signer=signer)
+              
+    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient','ComputeClient','DatabaseClient']
