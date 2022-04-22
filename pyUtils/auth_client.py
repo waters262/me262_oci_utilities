@@ -97,4 +97,21 @@ def get_client(client_type='IdentityClient',auth_type='auth_token',tenancyConfig
                delegation_token=delegation_token)
             return oci.database.DatabaseClient({},signer=signer)
               
-    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient','ComputeClient','DatabaseClient']
+    if client_type == 'FileStorageClient':
+        if auth_type == 'security_token':  # Typical web browser authentication
+            return oci.file_storage.FileStorageClient(
+                            {'region':oci.config.from_file(profile_name=tenancyProfile)['region']},
+                            signer=token_signer(tenancyConfig['auth_profile'])  )
+        elif auth_type == 'auth_token':   # Set up with authentication token
+            return oci.file_storage.FileStorageClient(tenancyConfig)
+        elif auth_type == 'instance_principal': # Instance principal
+            signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            return oci.file_storage.FileStorageClient({},signer=signer)
+        elif auth_type == 'obo':  # Cloud Shell
+            delegation_token = open('/etc/oci/delegation_token', 'r').read()
+            signer = oci.auth.signers.InstancePrincipalsDelegationTokenSigner(
+               delegation_token=delegation_token)
+            return oci.file_storage.FileStorageClient({},signer=signer)
+              
+    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient','ComputeClient','DatabaseClient','FileStorageClient']
+
