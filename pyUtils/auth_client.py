@@ -51,19 +51,19 @@ def get_client(client_type='IdentityClient',auth_type='auth_token',tenancyConfig
                         
     if client_type == 'VirtualNetworkClient':
         if auth_type == 'security_token':  # Typical web browser authentication
-            return oci.object_storage.VirtualNetworkClient(
+            return oci.core.VirtualNetworkClient(
                             {'region':oci.config.from_file(profile_name=tenancyProfile)['region']},
                             signer=token_signer(tenancyConfig['auth_profile'])  )
         elif auth_type == 'auth_token':   # Set up with authentication token
-            return oci.object_storage.VirtualNetworkClient(tenancyConfig)
+            return oci.core.VirtualNetworkClient(tenancyConfig)
         elif auth_type == 'instance_principal': # Instance principal
             signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-            return oci.object_storage.VirtualNetworkClient({},signer=signer)
+            return oci.core.VirtualNetworkClient({},signer=signer)
         elif auth_type == 'obo':  # Cloud Shell
             delegation_token = open('/etc/oci/delegation_token', 'r').read()
             signer = oci.auth.signers.InstancePrincipalsDelegationTokenSigner(
                delegation_token=delegation_token)
-            return oci.object_storage.VirtualNetworkClient({},signer=signer)
+            return oci.core.VirtualNetworkClient({},signer=signer)
               
                 
     return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient']
