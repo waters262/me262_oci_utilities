@@ -49,13 +49,16 @@ if __name__ == "__main__":
     network = get_client(client_type='VirtualNetworkClient',    tenancyConfig=tenancyConfig)
     database_client = get_client(client_type='DatabaseClient',    tenancyConfig=tenancyConfig)
     compute_client = get_client(client_type='ComputeClient',    tenancyConfig=tenancyConfig)
+    block_storage_client = get_client(client_type='BlockStorageClient',    tenancyConfig=tenancyConfig)
 
     # network = oci.core.VirtualNetworkClient({'region': ssoRegion}, signer=signer)
 
     print("Network var type: ", type(network))
     print("Compute var type: ", type(compute_client))
     print("Database var type: ", type(database_client))
-    print(network)
+    print("Block Storage var type: ", type(block_storage_client))
+
+#    print(network)
 
 
 #    signer =  oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
