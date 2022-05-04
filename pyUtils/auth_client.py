@@ -130,5 +130,22 @@ def get_client(client_type='IdentityClient',auth_type='auth_token',tenancyConfig
                delegation_token=delegation_token)
             return oci.core.BlockstorageClient({},signer=signer)
 
-    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient','ComputeClient','DatabaseClient','FileStorageClient','BlockStorageClient']
+              
+    if client_type == 'BastionClient':
+        if auth_type == 'security_token':  # Typical web browser authentication
+            return oci.bastion.BastionClient(
+                            {'region':oci.config.from_file(profile_name=tenancyProfile)['region']},
+                            signer=token_signer(tenancyConfig['auth_profile'])  )
+        elif auth_type == 'auth_token':   # Set up with authentication token
+            return oci.bastion.BastionClient(tenancyConfig)
+        elif auth_type == 'instance_principal': # Instance principal
+            signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            return oci.bastion.BastionClient({},signer=signer)
+        elif auth_type == 'obo':  # Cloud Shell
+            delegation_token = open('/etc/oci/delegation_token', 'r').read()
+            signer = oci.auth.signers.InstancePrincipalsDelegationTokenSigner(
+               delegation_token=delegation_token)
+            return oci.bastion.BastionClient({},signer=signer)
+
+    return ['MonitoringClient','ObjectStorageClient','IdentityClient','VirtualNetworkClient','ComputeClient','DatabaseClient','FileStorageClient','BlockStorageClient','BastionClient']
 

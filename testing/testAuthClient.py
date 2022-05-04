@@ -50,6 +50,7 @@ if __name__ == "__main__":
     database_client = get_client(client_type='DatabaseClient',    tenancyConfig=tenancyConfig)
     compute_client = get_client(client_type='ComputeClient',    tenancyConfig=tenancyConfig)
     block_storage_client = get_client(client_type='BlockStorageClient',    tenancyConfig=tenancyConfig)
+    bastion_client = get_client(client_type='BastionClient',    tenancyConfig=tenancyConfig)
 
     # network = oci.core.VirtualNetworkClient({'region': ssoRegion}, signer=signer)
 
@@ -57,6 +58,7 @@ if __name__ == "__main__":
     print("Compute var type: ", type(compute_client))
     print("Database var type: ", type(database_client))
     print("Block Storage var type: ", type(block_storage_client))
+    print("Bastion var type: ", type(bastion_client))
 
 #    print(network)
 
